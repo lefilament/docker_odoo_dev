@@ -1,0 +1,14 @@
+version: "3"
+services:
+    ansible:
+        build: 
+            context: .
+            args:
+                GIT_REPO: "https://github.com/remi-filament/ansible"
+                GIT_EMAIL: "test@example.com"
+        tty: true
+        volumes:
+            - filestore:/root
+        
+volumes:
+    filestore:

@@ -1,0 +1,17 @@
+.vault.txt
+ansible/ssh/*
+# Ignore docker-compose.yml by default, to allow easy defaults per clone
+docker-compose.yml
+odoo-dev/odoo/custom/src/
+odoo-dev/odoo/auto/addons/
+odoo-dev/backups/odoo/
+
+# Compiled formats, cache, temporary files, git garbage
+**.~
+**.mo
+**.py[co]
+**.egg-info
+**.orig
+
+# Editor garbage folders
+.vscode

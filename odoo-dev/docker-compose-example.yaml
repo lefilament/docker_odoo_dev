@@ -1,0 +1,73 @@
+version: "2.1"
+services:
+    odoo:
+        build:
+            context: ./odoo
+            args:
+                # To aggregate in development, use `setup-devel.yaml`
+                AGGREGATE: "false"
+                # No need for this in development
+                PIP_INSTALL_ODOO: "false"
+                CLEAN: "false"
+                COMPILE: "false"
+                CONFIG_BUILD: "false"
+        environment:
+            ADMIN_PASSWORD: admin
+            PYTHONOPTIMIZE: ""
+            PGDATABASE: devodoo
+            PGPASSWORD: pgpass
+            PGUSER: odoo
+            PROXY_MODE: "true"
+            # You may want demo for development
+            WITHOUT_DEMO: "true"
+        tty: true
+        ports:
+            - "127.0.0.1:8069:8069"
+            - "127.0.0.1:8072:8072"
+            - "127.0.0.1:6899:6899"
+        depends_on:
+            - db
+            - smtp
+            - inbox
+            - wdb
+        volumes:
+            - ./odoo/custom:/opt/odoo/custom:ro,z
+            - ./odoo/auto/addons:/opt/odoo/auto/addons:rw,z
+            - filestore:/var/lib/odoo:z
+        labels:
+            traefik.docker.network: "inverseproxy_shared"
+            traefik.enable: "true"
+            traefik.frontend.passHostHeader: "true"
+            traefik.longpolling.port: "8072"
+            traefik.port: "8069"
+        command:
+            - odoo
+            - --workers=0
+            - --dev=reload,qweb,werkzeug,xml,wdb
+
+    db:
+        image: postgres:9.6-alpine
+        environment:
+            POSTGRES_USER: odoo
+            POSTGRES_PASSWORD: pgpass
+        volumes:
+            - db:/var/lib/postgresql/data:z
+
+    smtp:
+        image: tecnativa/smtp-sink
+
+
+    inbox:
+        image: tecnativa/tcp-proxy
+        environment:
+            LISTEN: ":100"
+            TALK: "localhost:995"
+
+    wdb:
+        image: yajo/wdb-server
+        ports:
+            - "127.0.0.1:1984:1984"
+
+volumes:
+    filestore:
+    db:

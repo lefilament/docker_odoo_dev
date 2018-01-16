@@ -1,0 +1,32 @@
+# Use this environment to download all repositories from `repos.yaml` file:
+#
+#   export UID="$(id -u $USER)" GID="$(id -g $USER)" UMASK="$(umask)"
+#   docker-compose -f setup-devel.yaml run --rm odoo
+#
+# You can clean your git project before if you want to have all really clean:
+#
+#   git clean -ffd
+
+version: "2.1"
+
+services:
+    odoo:
+        build:
+            context: ./odoo
+            args:
+                AGGREGATE: "false"
+                DEPTH_DEFAULT: 100
+                PYTHONOPTIMIZE: 0
+                PIP_INSTALL_ODOO: "false"
+                CLEAN: "false"
+                COMPILE: "false"
+        volumes:
+            - ./odoo/custom/src:/opt/odoo/custom/src:rw,z
+        environment:
+            DEPTH_DEFAULT: 100
+            # XXX Export these variables before running setup to own the files
+            UID: 1000
+            GID: 1000
+            UMASK: 0664
+        user: root
+        entrypoint: autoaggregate
