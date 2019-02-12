@@ -15,11 +15,12 @@ services:
             context: ./odoo
             args:
                 AGGREGATE: "false"
-                DEPTH_DEFAULT: 100
-                PYTHONOPTIMIZE: 0
-                PIP_INSTALL_ODOO: "false"
                 CLEAN: "false"
                 COMPILE: "false"
+                DEPTH_DEFAULT: 100
+                ODOO_VERSION: "12.0"
+                PIP_INSTALL_ODOO: "false"
+                PYTHONOPTIMIZE: ""
         volumes:
             - ./odoo/custom/src:/opt/odoo/custom/src:rw,z
         environment:
@@ -27,6 +28,6 @@ services:
             # XXX Export these variables before running setup to own the files
             UID: 1000
             GID: 1000
-            UMASK: 0664
+            UMASK: 0113
         user: root
         entrypoint: autoaggregate

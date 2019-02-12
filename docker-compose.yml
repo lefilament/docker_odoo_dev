@@ -7,61 +7,57 @@ services:
                 # To aggregate in development, use `setup-devel.yaml`
                 AGGREGATE: "false"
                 # No need for this in development
-                PIP_INSTALL_ODOO: "false"
                 CLEAN: "false"
                 COMPILE: "false"
                 CONFIG_BUILD: "false"
+                ODOO_VERSION: "12.0"
+                PIP_INSTALL_ODOO: "false"
         environment:
             ADMIN_PASSWORD: admin
+            DOODBA_ENVIRONMENT: devel
+            INITIAL_LANG: "fr_FR"
             PYTHONOPTIMIZE: ""
-            PGDATABASE: devodoo
+            PGDATABASE: dev12
             PGPASSWORD: pgpass
             PGUSER: odoo
-            PROXY_MODE: "true"
+            PROXY_MODE: "false"
+            PYTHONPATH: /opt/odoo/custom/src/odoo
+            SMTP_PORT: "1025"
             # You may want demo for development
-            WITHOUT_DEMO: "true"
+            WITHOUT_DEMO: "false"
         tty: true
         ports:
             - "127.0.0.1:8069:8069"
-            - "127.0.0.1:8072:8072"
             - "127.0.0.1:6899:6899"
         depends_on:
             - db
             - smtp
-            - inbox
             - wdb
         volumes:
             - ./odoo/custom:/opt/odoo/custom:ro,z
             - ./odoo/auto/addons:/opt/odoo/auto/addons:rw,z
             - filestore:/var/lib/odoo:z
-        labels:
-            traefik.docker.network: "inverseproxy_shared"
-            traefik.enable: "true"
-            traefik.frontend.passHostHeader: "true"
-            traefik.longpolling.port: "8072"
-            traefik.port: "8069"
         command:
             - odoo
             - --workers=0
+            - --init=base
             - --dev=reload,qweb,werkzeug,xml,wdb
 
     db:
-        image: postgres:9.6-alpine
+        image: postgres:10-alpine
         environment:
             POSTGRES_USER: odoo
             POSTGRES_PASSWORD: pgpass
+            POSTGRES_DB: dev12
         volumes:
             - db:/var/lib/postgresql/data:z
+        command:
+            - -cwork_mem=32MB
 
     smtp:
-        image: tecnativa/smtp-sink
-
-
-    inbox:
-        image: tecnativa/tcp-proxy
-        environment:
-            LISTEN: ":100"
-            TALK: "localhost:995"
+        image: mailhog/mailhog
+        ports:
+            - "127.0.0.1:8025:8025"
 
     wdb:
         image: yajo/wdb-server

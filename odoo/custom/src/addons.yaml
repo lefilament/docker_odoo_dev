@@ -1,0 +1,36 @@
+# OCA repo account-financial-reporting 
+account-financial-reporting:
+    -  account_tax_balance
+
+# OCA repo bank-statement-import 
+bank-statement-import:
+    -  account_bank_statement_import_ofx
+
+# OCA repo partner-contact 
+partner-contact:
+    -  partner_firstname
+
+# OCA repo server-brand 
+server-brand:
+    -  disable_odoo_online
+    -  remove_odoo_enterprise
+
+# OCA repo server-tools 
+server-tools:
+    -  module_auto_update
+
+# OCA repo server-ux 
+server-ux:
+    -  base_technical_features
+    -  date_range
+    -  mass_editing
+
+# OCA repo social 
+social:
+    -  mail_debrand
+
+# OCA repo web 
+web:
+    - web_environment_ribbon
+    - web_responsive
+    - web_timeline

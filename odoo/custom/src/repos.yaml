@@ -1,0 +1,23 @@
+# OCA repo bank-statement-import 
+./bank-statement-import:
+    defaults:
+        depth: $DEPTH_DEFAULT
+    remotes:
+        oca: https://github.com/OCA/bank-statement-import.git
+    target:
+        oca $ODOO_VERSION
+    merges:
+        - oca $ODOO_VERSION
+        - oca refs/pull/200/head
+
+# OCA repo server-tools 
+./server-brand:
+    defaults:
+        depth: $DEPTH_DEFAULT
+    remotes:
+        oca: https://github.com/OCA/server-brand.git
+    target:
+        oca $ODOO_VERSION
+    merges:
+        - oca $ODOO_VERSION
+        - oca refs/pull/12/head
